@@ -1,0 +1,3 @@
+[submodule "scad/scadhelpers"]
+	path = scad/scadhelpers
+	url = git@github.com:ariloulaleelay/scadhelpers.git
