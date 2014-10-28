@@ -19,7 +19,7 @@ rubber_holder_hole_depth = 3;
 rubber_holder_hole_angle = 15;
 
 rod_external_diameter = 10;
-rod_holding_screw_diameter = 5;
+rod_holding_screw_diameter = 4;
 
 base_height = rod_external_diameter + 6;
 base_external_diameter = 60;
@@ -56,10 +56,10 @@ module base_ring() {
 
     for (i = [1 : 7]) {
       rz(360 / 8 * i)
-      tx((base_external_diameter * 0.5 + base_internal_diameter * 0.5) / 2)
+      tx((base_external_diameter + base_internal_diameter) / 4)
       cylinder(h = base_height + hole_tolerance, d = rod_holding_screw_diameter + hole_tolerance, center = true);
     }
-    tx((base_external_diameter * 0.67 + base_internal_diameter * 0.33) / 2)
+    tx((base_external_diameter / 2 + cube_hole_depth) / 2)
     cylinder(h = base_height + hole_tolerance, d = rod_holding_screw_diameter + hole_tolerance, center = true);
   }
 }
