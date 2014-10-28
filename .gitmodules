@@ -1,3 +1,6 @@
 [submodule "scad/scadhelpers"]
 	path = scad/scadhelpers
 	url = git@github.com:ariloulaleelay/scadhelpers.git
+[submodule "scadhelpers"]
+	path = scadhelpers
+	url = https://github.com/ariloulaleelay/scadhelpers.git
