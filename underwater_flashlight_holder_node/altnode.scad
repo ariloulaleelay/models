@@ -25,6 +25,18 @@ base_height = rod_external_diameter + 6;
 base_external_diameter = 60;
 base_internal_diameter = 28 + hole_tolerance;
 
+antiwrap_plate_diameter = 15;
+antiwrap_plate_height = 1.5;
+
+module abs_antiwrap_rings() {
+  for (i = [0 : 5]) {
+    rz(360 / 6 * i)
+    tx(base_external_diameter / 2 + antiwrap_plate_diameter / 2 * 0.5)
+    tz(-base_height / 2)
+    cylinder(h = antiwrap_plate_height, d = antiwrap_plate_diameter);
+  }
+}
+
 module base_ring() {
   difference() {
     cylinder(h = base_height, d = base_external_diameter, center = true);
@@ -64,5 +76,8 @@ module base_ring() {
   }
 }
 
+union() {
+  base_ring();
 
-base_ring();
+  abs_antiwrap_rings();
+}
