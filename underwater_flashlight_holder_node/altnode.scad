@@ -29,12 +29,12 @@ flaslight_hole_diameter = 28 + hole_tolerance;
 rod_external_diameter = 10;
 
 default_bolt_diameter = 4;
-default_bolt_cap_diameter = 7;
-default_bolt_cap_length = 5;
+default_bolt_cap_diameter = 6.87;
+default_bolt_cap_length = 3.9;
 
-default_nut_height = 3;
-default_nut_ext_diameter = 8;
-default_nut_small_diameter = 7;
+default_nut_height = 3.1;
+default_nut_ext_diameter = 7.85;
+default_nut_small_diameter = 6.8;
 
 // evaluated parameters
 rod_holding_bolt_diameter = default_bolt_diameter;
@@ -103,7 +103,7 @@ module external_ring() {
   difference() {
     cylinder(h = base_height, d = base_external_diameter, center = true);
 
-    sphere(d = sphere_diameter + hole_tolerance * 4);
+    sphere(d = sphere_diameter + hole_tolerance * 3);
 
     for (i = [0 : 7]) {
 
