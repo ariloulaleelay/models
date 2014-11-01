@@ -13,6 +13,8 @@ hole_tolerance = 0.3;
 antiwrap_plate_diameter = 20;
 antiwrap_plate_height = 1.5;
 
+sphere_clearance = 0.7; 
+
 // relative parts parameters
 cube_hole_depth = 19;
 cube_hole_width = 13;
@@ -103,7 +105,7 @@ module external_ring() {
   difference() {
     cylinder(h = base_height, d = base_external_diameter, center = true);
 
-    sphere(d = sphere_diameter + hole_tolerance * 3);
+    sphere(d = sphere_diameter + sphere_clearance * 2);
 
     for (i = [0 : 7]) {
 
