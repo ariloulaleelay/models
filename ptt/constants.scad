@@ -11,15 +11,15 @@ disc_radial_gap = 1;
 disc_number = 4;
 disc_gap = 1;
 
-nozzle_cone_length = 10;
-nozzle_length = 30;
-nozzle_thickness = 1;
-nozzle_pipe_diameter = 6;
+nozzle_cone_length = 20;
+nozzle_pipe_length = 15;
+nozzle_thickness = 1.5;
+nozzle_pipe_diameter = 7;
 
-shell_thickness = 3;
+shell_thickness = 4;
 shell_bolt_diameter = 4;
 
-shell_exhaust_diameter = disc_internal_diameter + 3;
+shell_exhaust_diameter = disc_internal_diameter - 4;
 shell_height = disc_number * (disc_thickness + disc_gap) + disc_gap + shell_thickness;
 shell_diameter = disc_diameter + disc_radial_gap * 2 + shell_thickness;
 shell_internal_diameter = disc_diameter + disc_radial_gap;

@@ -1,15 +1,20 @@
 include <constants.scad>
 include <../scadhelpers/all.scad>
 
-shell_base_bolt_position = shell_diameter / 2 + shell_thickness / 2;
+shell_base_bolt_position = shell_diameter / 2 + shell_bolt_diameter / 2;
 
 module shell_base(height) {
+  cube_side = shell_bolt_extension_diameter / 2 + tolerance;
   union() {
     cylinder(h = height, d = shell_diameter, center = true);
     for (i = [0 : 5]) {
       rz(i * 360 / 6)
-      tx(shell_base_bolt_position)
-      cylinder(h = height, d = shell_bolt_extension_diameter, center = true);
+      tx(shell_base_bolt_position) {
+        cylinder(h = height, d = shell_bolt_extension_diameter, center = true);
+
+        tx(-shell_bolt_extension_diameter / 4 - tolerance / 2)
+        cube([shell_bolt_extension_diameter / 2 + tolerance, shell_bolt_extension_diameter, height], center = true); 
+      }
     }
   }
 }
@@ -17,18 +22,45 @@ module shell_base(height) {
 module shell() {
 
   module nozzle_hole() {
-    cylinder(h = nozzle_cone_length, r1 = nozzle_cone_diameter_min / 2, r2 = nozzle_internal_diameter / 2);
+    union() {
+      hull() {
+        ty(shell_thickness / 2)
+        cube([nozzle_cone_diameter_min, shell_height - shell_thickness, tolerance], center = true);
 
-    tz(nozzle_cone_length)
-    cylinder(h = nozzle_length + tolerance, d = nozzle_internal_diameter);
+        tz(nozzle_cone_length)
+        ty(-shell_height / 2 + nozzle_pipe_diameter / 2)
+        cylinder(h = tolerance, d = nozzle_internal_diameter);
+      }
+      tz(nozzle_cone_length)
+      ty(-shell_height / 2 + nozzle_pipe_diameter / 2)
+      cylinder(h = nozzle_pipe_length + tolerance, d = nozzle_internal_diameter);
+    }
   }
 
   module nozzle_transformation() {
+    angle_tan = (nozzle_internal_diameter - nozzle_cone_diameter_min) / nozzle_cone_length;
+    angle = atan(angle_tan);
     for (c = [0 : $children - 1]) {
       tx(shell_internal_diameter / 2 - tolerance)
-      rz(-90)
+      rz(-90 + angle + 5)
       ry(90)
+      rz(90)
       child(c);
+    }
+  }
+
+  module nozzle_shell() {
+    union() {
+      hull() {
+        cube([nozzle_pipe_diameter, shell_height, tolerance], center = true);
+
+        tz(nozzle_cone_length)
+        ty(-shell_height / 2 + nozzle_pipe_diameter / 2)
+        cylinder(h = tolerance, d = nozzle_pipe_diameter);
+      }
+      tz(nozzle_cone_length)
+      ty(-shell_height / 2 + nozzle_pipe_diameter / 2)
+      cylinder(h = nozzle_pipe_length, d = nozzle_pipe_diameter);
     }
   }
 
@@ -37,7 +69,7 @@ module shell() {
       shell_base(shell_height);
 
       nozzle_transformation()
-      cylinder(h = nozzle_length, d = nozzle_pipe_diameter);
+      nozzle_shell();
     }
 
     tz(shell_thickness + tolerance / 2) 
@@ -63,9 +95,10 @@ module cap() {
     for (i = [0 : 5]) {
       rz(i * 360 / 6)
       tx(shell_base_bolt_position)
-      cylinder(h = shell_thickness + tolerance, d = shell_bolt_diameter + tolerance, center = true);
+      cylinder(h = shell_thickness + tolerance, d = shell_bolt_diameter + tolerance * 1.5, center = true);
     }
   }
 }
 
 cap();
+//shell();
