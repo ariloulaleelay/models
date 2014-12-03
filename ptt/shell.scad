@@ -1,108 +1,92 @@
 include <constants.scad>
 include <../scadhelpers/all.scad>
-
-shell_base_bolt_position = shell_diameter / 2 + shell_bolt_diameter / 2;
-
-module shell_base(height) {
-  cube_side = shell_bolt_extension_diameter / 2 + tolerance;
-  union() {
-    cylinder(h = height, d = shell_diameter, center = true);
-    for (i = [0 : shell_bolts_number - 1]) {
-      rz(i * 360 / shell_bolts_number)
-      tx(shell_base_bolt_position) {
-        cylinder(h = height, d = shell_bolt_extension_diameter, center = true);
-
-        tx(-shell_bolt_extension_diameter / 4 - tolerance / 2)
-        cube([shell_bolt_extension_diameter / 2 + tolerance, shell_bolt_extension_diameter, height], center = true); 
-      }
-    }
-  }
-}
+include <shell_bolts.scad>
 
 module shell() {
 
-  module nozzle_hole() {
-    union() {
-
-      tz(nozzle_cone_length / 4)
-      tx(-nozzle_cone_diameter_min / 2)
-      ty(shell_thickness / 2)
-      cube([nozzle_cone_diameter_min, shell_height - shell_thickness - nozzle_top_cover, nozzle_cone_length / 2], center = true);
-
-      hull() {
-        tz(nozzle_cone_length / 2)
-        tx(-nozzle_cone_diameter_min / 2)
-        ty(shell_thickness / 2)
-        cube([nozzle_cone_diameter_min, shell_height - shell_thickness - nozzle_top_cover, tolerance], center = true);
-
-        tz(nozzle_cone_length)
-        ty(-shell_height / 2 + nozzle_pipe_diameter / 2)
-        cylinder(h = tolerance, d = nozzle_internal_diameter);
-      }
-      tz(nozzle_cone_length)
-      ty(-shell_height / 2 + nozzle_pipe_diameter / 2)
-      cylinder(h = nozzle_pipe_length + tolerance, d = nozzle_internal_diameter);
-    }
-  }
-
   module nozzle_transformation() {
     for (c = [0 : $children - 1]) {
-      tx(shell_internal_diameter / 2)
-      rz(-90)
-      ry(90)
-      rz(90)
+      tx(shell_internal_diameter / 2 - nozzle_slot / 2)
+      rx(90)
       child(c);
     }
   }
 
+  module nozzle_hole() {
+    ty(nozzle_slot_length / 2 + shell_thickness)
+    union() {
+
+      tz(nozzle_cone_length / 4)
+      cube([nozzle_slot, nozzle_slot_length, nozzle_cone_length / 2], center = true);
+
+      hull() {
+        tz(nozzle_cone_length / 2)
+        cube([nozzle_slot, nozzle_slot_length, tolerance], center = true);
+
+        tz(nozzle_cone_length)
+        cylinder(h = tolerance, d = nozzle_internal_diameter);
+      }
+      tz(nozzle_cone_length)
+      cylinder(h = nozzle_pipe_length + tolerance, d = nozzle_internal_diameter);
+    }
+  }
+
+
   module nozzle_shell() {
+    support_steps = ceil(nozzle_pipe_length / 4);
+
+    ty(shell_height / 2)
     union() {
       tz(nozzle_cone_length / 2)
       cube([nozzle_pipe_diameter, shell_height, nozzle_cone_length], center = true);
 
+      ty((shell_height - nozzle_slot_length) / 4)
       tz(nozzle_cone_length - tolerance)
-      ty(-shell_height / 2 + nozzle_pipe_diameter / 2)
       cylinder(h = nozzle_pipe_length + tolerance, d = nozzle_pipe_diameter);
+
+      for (i = [1 : support_steps]) {
+        ty(-shell_height / 4)
+        tz(nozzle_cone_length + nozzle_pipe_length * i / support_steps - 0.3)
+        cube([nozzle_pipe_diameter, shell_height / 2, 0.6], center = true);
+      }
     }
+  }
+
+  module chamfer_hole() {
+    side_size = shell_thickness * sqrt(2) + tolerance; 
+
+    tz(shell_height + shell_thickness / 2)
+    rotate_extrude()
+    tx(shell_diameter / 2 - shell_thickness / 2)
+    rz(45)
+    ty(-side_size / 2)
+    square([side_size, side_size]);
   }
 
   difference() {
     union() {
-      shell_base(shell_height);
+      difference() {
+        cylinder(h = shell_height + shell_thickness, d = shell_diameter);
+        chamfer_hole();
+      }
+
+      shell_bolts(shell_height);
 
       nozzle_transformation()
       nozzle_shell();
     }
 
     tz(shell_thickness + tolerance / 2) 
-    cylinder(h = shell_height + tolerance, d = shell_internal_diameter, center = true); 
+    cylinder(h = infinity, d = shell_internal_diameter); 
 
-    cylinder(h = shell_height + tolerance, d = shell_exhaust_diameter, center = true);
+    tz(-tolerance)
+    cylinder(h = infinity, d = shell_exhaust_diameter);
 
     nozzle_transformation()
     nozzle_hole();
-
-    for (i = [0 : shell_bolts_number - 1]) {
-      rz(i * 360 / shell_bolts_number)
-      tx(shell_base_bolt_position)
-      cylinder(h = shell_height + tolerance, d = shell_bolt_diameter, center = true);
-    }
+    
+    shell_bolts_hole();
   }
 }
 
-module cap() {
-  difference() {
-    shell_base(shell_thickness);
-
-    for (i = [0 : shell_bolts_number - 1]) {
-      rz(i * 360 / shell_bolts_number)
-      tx(shell_base_bolt_position)
-      cylinder(h = shell_thickness + tolerance, d = shell_bolt_diameter + tolerance * 1.5, center = true);
-    }
-
-    cylinder(h = shell_thickness + tolerance, d = shell_exhaust_diameter, center = true);
-  }
-}
-
-cap();
-//shell();
+shell();
