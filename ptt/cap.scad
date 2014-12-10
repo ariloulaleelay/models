@@ -27,7 +27,8 @@ module cap() {
     cylinder(h = shell_thickness + tolerance, d = shell_internal_diameter);
 
     chamfer_hole();
-    //cylinder(h = shell_thickness + tolerance, d = shell_exhaust_diameter, center = true);
+
+    cylinder(h = infinity, d = shell_exhaust_diameter, center = true);
   }
 }
 
