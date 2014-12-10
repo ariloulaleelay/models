@@ -3,7 +3,7 @@ include <../scadhelpers/all.scad>
 
 module shaft() {
   union() {
-    cylinder(h = disc_thickness, d = disc_diameter); 
+    cylinder(h = disc_thickness, d = disc_diameter * 0.75); 
 
     tz(disc_thickness)
     intersection() {

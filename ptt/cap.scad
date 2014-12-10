@@ -7,7 +7,7 @@ module cap() {
   module chamfer_hole() {
     side_size = shell_thickness * sqrt(2) + tolerance; 
 
-    tz(shell_thickness * 2.7)
+    tz(shell_thickness * 2.8)
     rotate_extrude()
     tx(shell_internal_diameter / 2 - shell_thickness / 2)
     rz(-45)

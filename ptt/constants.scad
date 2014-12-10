@@ -4,11 +4,11 @@ infinity = 10000;
 
 tolerance = 0.1;
 
-disc_diameter = 70;
+disc_diameter = 50;
 disc_skirt_width = 2;
-disc_skirt_height = 0.3;
-disc_exhaust_diameter = 20;
-disc_thickness = 2;
+disc_skirt_height = 0;
+disc_exhaust_diameter = 15;
+disc_thickness = 1.5;
 disc_radial_gap = 1.5;
 disc_number = 5;
 disc_gap = 0.4;
@@ -21,7 +21,7 @@ nozzle_slot = 0.5;
 nozzle_top_cover = 1;
 
 shell_bolts_number = 8;
-shell_thickness = 2.4;
+shell_thickness = 1.8;
 shell_bolt_diameter = 4;
 shell_exhaust_diameter = disc_exhaust_diameter + 4;
 
