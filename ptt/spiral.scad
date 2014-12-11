@@ -25,6 +25,9 @@ module spiral(fake=false) {
         ty(-disc_thickness / 2)
         cube([spiral_external_diameter / 2, disc_thickness, spiral_height]);
       }
+
+      tz(spiral_height - tolerance)
+      cylinder(h = shell_thickness + tolerance, d = shell_exhaust_diameter - shaft_radial_gap); 
     }
 
     cylinder(h = infinity, d = disc_exhaust_diameter, center = true);
