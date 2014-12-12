@@ -3,6 +3,8 @@ include <../scadhelpers/all.scad>
 include <shell_bolts.scad>
 include <disc_support.scad>
 
+function alpha(i, min_i, max_i) = (i - min_i) / (max_i - min_i);
+
 module shell() {
 
   module nozzle_transformation() {
@@ -14,7 +16,7 @@ module shell() {
   }
 
   module nozzle_hole() {
-    ty(nozzle_slot_length / 2 + shell_thickness)
+    ty((shell_height - shell_thickness) / 2 + shell_thickness)
     union() {
 
       tz(nozzle_cone_length / 4)
@@ -25,35 +27,55 @@ module shell() {
         cube([nozzle_slot, nozzle_slot_length, tolerance], center = true);
 
         tz(nozzle_cone_length)
-        cylinder(h = tolerance, d = nozzle_internal_diameter);
+        cylinder(h = tolerance, d = nozzle_internal_diameter_max);
       }
+
       tz(nozzle_cone_length)
-      cylinder(h = nozzle_pipe_length + tolerance, d = nozzle_internal_diameter);
+      cylinder(
+        h = nozzle_pipe_length + tolerance, 
+        r1 = nozzle_internal_diameter_max / 2,
+        r2 = nozzle_internal_diameter_min / 2
+      );
     }
   }
 
 
   module nozzle_shell() {
     support_steps = ceil(nozzle_pipe_length / 4);
+    support_thickness = 0.4;
 
-    ty(shell_height / 2)
+    pipe_center = (shell_height - shell_thickness) / 2 + shell_thickness;
+
     union() {
+      ty(shell_height / 2)
       tz(nozzle_cone_length / 2)
-      cube([nozzle_pipe_diameter + shell_thickness / 2, shell_height, nozzle_cone_length], center = true);
+      cube([nozzle_pipe_diameter_max, shell_height, nozzle_cone_length], center = true);
 
-      ty((shell_height - nozzle_slot_length) / 4)
+      ty(pipe_center)
       tz(nozzle_cone_length - tolerance)
-      cylinder(h = nozzle_pipe_length + tolerance, r1 = nozzle_pipe_diameter / 2 + shell_thickness / 4, r2 = nozzle_pipe_diameter / 2);
+      cylinder(
+        h = nozzle_pipe_length + tolerance, 
+        r1 = nozzle_pipe_diameter_max / 2, 
+        r2 = nozzle_pipe_diameter_min / 2
+      );
 
       for (i = [1 : support_steps]) {
-        ty(-shell_height / 4)
-        tz(nozzle_cone_length + nozzle_pipe_length * i / support_steps - 0.15)
-        cube([nozzle_pipe_diameter, shell_height / 2, 0.3], center = true);
+        tz(nozzle_cone_length + nozzle_pipe_length * i / support_steps - support_thickness / 2)
+        ty(pipe_center / 2)
+        cube(
+          [
+            nozzle_pipe_diameter_min * alpha(i, 1, support_steps) 
+              + nozzle_pipe_diameter_max * (1.0 - alpha(i, 1, support_steps)), 
+            pipe_center, 
+            support_thickness
+          ], 
+          center = true
+        );
       }
+
       tz(nozzle_cone_length)
-      tx(-nozzle_pipe_diameter / 2)
-      ty(-shell_height / 2)
-      cube([nozzle_pipe_diameter, 0.3, nozzle_pipe_length]);
+      tx(-nozzle_pipe_diameter_max / 2)
+      cube([nozzle_pipe_diameter_max, support_thickness, nozzle_pipe_length]);
     }
   }
 
