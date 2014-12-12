@@ -1,6 +1,7 @@
 include <constants.scad>
 include <../scadhelpers/all.scad>
 include <shell_bolts.scad>
+include <disc_support.scad>
 
 module cap() {
 
@@ -16,19 +17,24 @@ module cap() {
   }
 
 
-  difference() {
-    union() {
-      cylinder(h = shell_thickness * 2, d = shell_diameter);
+  union() {
+    difference() {
+      union() {
+        cylinder(h = shell_thickness * 2, d = shell_diameter);
 
-      shell_bolts(shell_thickness * 1.5);
+
+        shell_bolts(shell_thickness * 1.5);
+      }
+
+      tz(shell_thickness)
+      cylinder(h = shell_thickness + tolerance, d = shell_internal_diameter);
+
+      chamfer_hole();
+
+      cylinder(h = infinity, d = shell_exhaust_diameter, center = true);
     }
 
-    tz(shell_thickness)
-    cylinder(h = shell_thickness + tolerance, d = shell_internal_diameter);
-
-    chamfer_hole();
-
-    cylinder(h = infinity, d = shell_exhaust_diameter, center = true);
+    disc_support(shell_thickness);
   }
 }
 

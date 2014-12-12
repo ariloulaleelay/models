@@ -1,36 +1,47 @@
 include <constants.scad>
 include <../scadhelpers/all.scad>
 include <../scadhelpers/spiral.scad>
+include <disc_support.scad>
 
 module spiral(fake=false) {
-  spiral_thickness = 0.62;
-  spiral_internal_diameter = disc_exhaust_diameter + spiral_thickness;
-  main_diameter = disc_diameter - shell_thickness * 2;
+  spiral_thickness = 1;
+  spiral_gap = 2;
 
-  spiral_external_diameter = main_diameter - spiral_thickness;
-  spiral_loops_count = (spiral_external_diameter - spiral_internal_diameter) / 2 / (spiral_thickness + 0.6);
+  spiral_internal_diameter = disc_exhaust_diameter;
+  spiral_external_diameter = disc_diameter - spiral_gap - shell_thickness;
+
+  spiral_loops_count = (spiral_external_diameter - spiral_internal_diameter) / 2 / (spiral_thickness + spiral_gap);
+  spiral_angle = 360 * spiral_loops_count;
   spiral_height = shell_height - shell_thickness;
 
+  union() {
+    difference() {
+      cylinder(h = spiral_height, d = disc_diameter);
 
-  difference() {
-    union() {
-      my()
-      spiral_1024(spiral_internal_diameter / 2, spiral_external_diameter / 2, 360 * spiral_loops_count, spiral_thickness, shell_height - shell_thickness);
+      union() {
+        my()
+        tz(-infinity / 2)
+        spiral_2048(spiral_internal_diameter / 2, spiral_external_diameter / 2, spiral_angle, spiral_gap, infinity);
 
-      translate_clone([0, 0, spiral_height - disc_thickness])
-      cylinder(h = disc_thickness, d = main_diameter); 
-
-      if (fake) {
-        rz(-360 * spiral_loops_count) 
-        ty(-disc_thickness / 2)
-        cube([spiral_external_diameter / 2, disc_thickness, spiral_height]);
+        rz(-spiral_angle)
+        tx(-spiral_gap / 2 + spiral_external_diameter / 2)
+        my()
+        cube([spiral_gap, infinity, infinity]);
       }
 
-      tz(spiral_height - tolerance)
-      cylinder(h = shell_thickness + tolerance, d = shell_exhaust_diameter - shaft_radial_gap); 
+      cylinder(h = infinity, d = disc_exhaust_diameter + shell_thickness * 3, center = true);
     }
 
-    cylinder(h = infinity, d = disc_exhaust_diameter, center = true);
+    disc_support(spiral_height);
+
+    difference() {
+      union() {
+        translate_clone([0, 0, spiral_height - disc_thickness])
+        cylinder(h = disc_thickness, d = disc_diameter);
+      }
+
+      cylinder(h = infinity, d = disc_exhaust_diameter, center = true);
+    }
   }
 }
 

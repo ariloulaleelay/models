@@ -10,8 +10,8 @@ disc_skirt_height = 0;
 disc_exhaust_diameter = 15;
 disc_thickness = 1.2;
 disc_radial_gap = 1.5;
-disc_number = 5;
-disc_gap = 0.4;
+disc_number = 8;
+disc_gap = 0.1;
 
 nozzle_cone_length = 30;
 nozzle_pipe_length = 25;

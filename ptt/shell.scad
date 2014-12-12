@@ -1,6 +1,7 @@
 include <constants.scad>
 include <../scadhelpers/all.scad>
 include <shell_bolts.scad>
+include <disc_support.scad>
 
 module shell() {
 
@@ -38,17 +39,21 @@ module shell() {
     ty(shell_height / 2)
     union() {
       tz(nozzle_cone_length / 2)
-      cube([nozzle_pipe_diameter, shell_height, nozzle_cone_length], center = true);
+      cube([nozzle_pipe_diameter + shell_thickness / 2, shell_height, nozzle_cone_length], center = true);
 
       ty((shell_height - nozzle_slot_length) / 4)
       tz(nozzle_cone_length - tolerance)
-      cylinder(h = nozzle_pipe_length + tolerance, d = nozzle_pipe_diameter);
+      cylinder(h = nozzle_pipe_length + tolerance, r1 = nozzle_pipe_diameter / 2 + shell_thickness / 4, r2 = nozzle_pipe_diameter / 2);
 
       for (i = [1 : support_steps]) {
         ty(-shell_height / 4)
-        tz(nozzle_cone_length + nozzle_pipe_length * i / support_steps - 0.3)
-        cube([nozzle_pipe_diameter, shell_height / 2, 0.6], center = true);
+        tz(nozzle_cone_length + nozzle_pipe_length * i / support_steps - 0.15)
+        cube([nozzle_pipe_diameter, shell_height / 2, 0.3], center = true);
       }
+      tz(nozzle_cone_length)
+      tx(-nozzle_pipe_diameter / 2)
+      ty(-shell_height / 2)
+      cube([nozzle_pipe_diameter, 0.3, nozzle_pipe_length]);
     }
   }
 
@@ -66,26 +71,31 @@ module shell() {
   difference() {
     union() {
       difference() {
-        cylinder(h = shell_height + shell_thickness, d = shell_diameter);
-        chamfer_hole();
+        union() {
+          difference() {
+            cylinder(h = shell_height + shell_thickness, d = shell_diameter);
+            chamfer_hole();
+          }
+
+          shell_bolts(shell_height);
+
+          nozzle_transformation()
+          nozzle_shell();
+        }
+
+        tz(-tolerance)
+        cylinder(h = infinity, d = shell_exhaust_diameter);
+
+        nozzle_transformation()
+        nozzle_hole();
+        shell_bolts_hole();
       }
 
-      shell_bolts(shell_height);
-
-      nozzle_transformation()
-      nozzle_shell();
+      disc_support(shell_height);
     }
 
     tz(shell_thickness + tolerance / 2) 
     cylinder(h = infinity, d = shell_internal_diameter); 
-
-    tz(-tolerance)
-    cylinder(h = infinity, d = shell_exhaust_diameter);
-
-    nozzle_transformation()
-    nozzle_hole();
-    
-    shell_bolts_hole();
   }
 }
 
