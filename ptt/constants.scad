@@ -24,7 +24,7 @@ nozzle_top_cover = 1;
 shell_bolts_number = 8;
 shell_thickness = 1.8;
 shell_bolt_diameter = 4;
-shell_exhaust_diameter = disc_exhaust_diameter + 4;
+shell_exhaust_diameter = disc_exhaust_diameter;
 
 shell_height = disc_number * (disc_thickness + max(disc_skirt_height, disc_gap)) + disc_gap + shell_thickness;
 shell_diameter = disc_diameter + disc_radial_gap * 2 + shell_thickness;

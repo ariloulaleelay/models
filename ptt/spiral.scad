@@ -4,10 +4,10 @@ include <../scadhelpers/spiral.scad>
 include <disc_support.scad>
 
 module spiral(fake=false) {
-  spiral_thickness = 1;
-  spiral_gap = 2;
+  spiral_thickness = 0.68;
+  spiral_gap = 1;
 
-  spiral_internal_diameter = disc_exhaust_diameter;
+  spiral_internal_diameter = disc_exhaust_diameter - spiral_gap / 2;
   spiral_external_diameter = disc_diameter - spiral_gap - shell_thickness;
 
   spiral_loops_count = (spiral_external_diameter - spiral_internal_diameter) / 2 / (spiral_thickness + spiral_gap);
@@ -25,11 +25,12 @@ module spiral(fake=false) {
 
         rz(-spiral_angle)
         tx(-spiral_gap / 2 + spiral_external_diameter / 2)
+        tz(-infinity / 2)
         my()
         cube([spiral_gap, infinity, infinity]);
       }
 
-      cylinder(h = infinity, d = disc_exhaust_diameter + shell_thickness * 3, center = true);
+      cylinder(h = infinity, d = disc_exhaust_diameter, center = true);
     }
 
     disc_support(spiral_height);
