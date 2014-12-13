@@ -7,7 +7,7 @@ tolerance = 0.1;
 exhaust_diameter = 15;
 general_thickness = 1.54;
 
-spiral_gap = 1.5;
+spiral_gap = 1.8;
 spiral_thickness = 0.64;
 spiral_height = 6;
 
@@ -18,7 +18,6 @@ disc_wall_thickness = 1.2;
 disc_lock_height = 2.4;
 disc_lock_width = 1.2;
 disc_lock_gap = 0.34;
-
 
 intake_pipe_length = 30;
 intake_pipe_thickness = 1.5;

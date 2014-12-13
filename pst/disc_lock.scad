@@ -2,7 +2,7 @@ include <constants.scad>
 include <../scadhelpers/all.scad>
 
 module disc_lock(height, shift=1) {
-  lock_steps = ceil((shell_internal_diameter - exhaust_diameter) / 2 / (disc_lock_width * 2));
+  lock_steps = ceil((shell_internal_diameter - exhaust_diameter - disc_lock_width * 2 * shift) / 2 / (disc_lock_width * 2));
 
   module ring(r1, r2) {
     difference() {
