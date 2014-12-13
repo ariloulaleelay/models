@@ -31,7 +31,8 @@ module spiral(fake=false) {
       cylinder(h = infinity, d = exhaust_diameter, center = true);
     }
 
-    disc_support(spiral_height);
+    tz(-disc_lock_height - disc_wall_thickness)
+    disc_support(spiral_height + disc_lock_height * 2 + disc_wall_thickness * 2);
 
     difference() {
       union() {
