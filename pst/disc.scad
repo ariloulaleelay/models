@@ -45,10 +45,18 @@ module spiral(fake=false) {
     }
 
     tz(-disc_wall_thickness - disc_lock_height)
-    disc_lock(disc_lock_height + tolerance, 2);
+    disc_lock(disc_lock_height + tolerance, 0);
 
     tz(spiral_height + disc_wall_thickness - tolerance)
-    disc_lock(disc_lock_height + tolerance, 2);
+    disc_lock(disc_lock_height + tolerance, 0);
+
+    tz(-disc_wall_thickness - disc_lock_height)
+    difference() {
+      cylinder(h = disc_lock_height, d = disc_diameter);
+
+      tz(-tolerance / 2)
+      cylinder(h = disc_lock_height + tolerance, d = disc_diameter - support_thickness);
+    }
   }
 }
 

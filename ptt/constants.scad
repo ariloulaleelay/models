@@ -18,7 +18,7 @@ nozzle_pipe_length = 25;
 nozzle_thickness = 1.5;
 nozzle_pipe_diameter_min = 7.8;
 nozzle_pipe_diameter_max = 9;
-nozzle_slot = 0.5;
+nozzle_slot = 1;
 nozzle_top_cover = 1;
 
 shell_bolts_number = 8;

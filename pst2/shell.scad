@@ -8,7 +8,7 @@ function alpha(i, min_i, max_i) = (i - min_i) / (max_i - min_i);
 
 module shell() {
 
-  intake_elevation = (shell_height - shell_thickness) / 2 + shell_thickness;
+  intake_elevation = shell_thickness + intake_internal_diameter_max / 2;
 
   module intake_transformation() {
     for (c = [0 : $children - 1]) {
@@ -102,8 +102,8 @@ module shell() {
             intake_shell();
           }
 
-          tz(-tolerance)
-          cylinder(h = infinity, d = exhaust_diameter);
+          //tz(-tolerance)
+          //cylinder(h = infinity, d = exhaust_diameter);
 
           intake_transformation()
           intake_hole();
@@ -111,14 +111,14 @@ module shell() {
           shell_bolts_hole();
         }
 
-        disc_support(shell_height);
+        //disc_support(shell_height);
       }
 
       tz(shell_thickness) 
       cylinder(h = infinity, d = shell_internal_diameter); 
     }
     
-    disc_lock(shell_thickness + disc_lock_height);
+    //disc_lock(shell_thickness + disc_lock_height);
   }
 }
 
