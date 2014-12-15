@@ -30,10 +30,11 @@ intake_nozzle_length = 20;
 shell_bolts_number = 5;
 shell_thickness = general_thickness; 
 shell_bolt_diameter = 4;
+shell_extra_space = 3;
 
 disc_height = spiral_height + disc_lock_height + disc_wall_thickness * 2;
 
-shell_height = disc_height + disc_gap * 2 + shell_thickness;
+shell_height = disc_height + disc_gap * 2 + shell_thickness + shell_extra_space;
 shell_diameter = disc_diameter + disc_gap * 2 + shell_thickness * 2;
 shell_internal_diameter = shell_diameter - shell_thickness * 2;
 shell_bolt_extension_diameter = shell_bolt_diameter + shell_thickness * 2;
