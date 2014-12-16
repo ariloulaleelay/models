@@ -13,7 +13,7 @@ module shell() {
   module intake_transformation() {
     for (c = [0 : $children - 1]) {
       //rz(360 / shell_bolts_number / 2)
-      tx(shell_internal_diameter / 2)
+      tx(shell_internal_diameter / 2 + shell_thickness + shell_nozzle_gap)
       tz(intake_elevation)
       //rz(90)
       rx(90)
@@ -72,8 +72,33 @@ module shell() {
     }
   }
 
-  //!intake_transformation()
-  //intake_hole();
+
+  module ring_nozzle_hole() {
+    union() {
+      difference() {
+        cylinder(h = shell_nozzle_width, d = shell_diameter - shell_thickness * 2);
+
+        cylinder(h = infinity, d = shell_internal_diameter + shell_thickness * 2, center = true);
+      }
+
+      for (i = [0: shell_nozzle_count - 1]) {
+        rz(360 * i / shell_nozzle_count)
+        tx(shell_internal_diameter / 2)
+        mx()
+        my()
+        cube([shell_nozzle_slot, shell_nozzle_depth, shell_nozzle_width]);
+      }
+    }
+  }
+
+/*  !tz(0) {
+    tz(intake_elevation - shell_nozzle_width / 2)
+    ring_nozzle_hole();
+
+    intake_transformation()
+    intake_hole();
+  }
+*/
 
   module chamfer_hole() {
     side_size = shell_thickness * sqrt(2) + tolerance; 
@@ -108,6 +133,9 @@ module shell() {
           intake_transformation()
           intake_hole();
 
+          tz(intake_elevation - shell_nozzle_width / 2)
+          ring_nozzle_hole();
+
           shell_bolts_hole();
         }
 
@@ -122,4 +150,6 @@ module shell() {
   }
 }
 
+//projection(cut = true)
+//tz(-(shell_height - shell_thickness) / 2 - shell_thickness)
 shell();

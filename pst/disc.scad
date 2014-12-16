@@ -13,51 +13,41 @@ module spiral(fake=false) {
 
   union() {
     difference() {
-      tz(-tolerance / 2)
-      cylinder(h = spiral_height + tolerance, d = disc_diameter);
+      cylinder(h = spiral_height + disc_wall_thickness * 2, d = disc_diameter);
 
+      tz(disc_wall_thickness)
       union() {
         my()
-        tz(-infinity / 2)
-        spiral_2048(spiral_internal_diameter / 2, spiral_external_diameter / 2, spiral_angle, spiral_gap, infinity);
+        spiral_2048(spiral_internal_diameter / 2, spiral_external_diameter / 2, spiral_angle, spiral_gap, spiral_height);
 
         rz(-spiral_angle)
         tx(-spiral_gap / 2 + spiral_external_diameter / 2)
-        tz(-infinity / 2)
         my()
-        cube([spiral_gap, infinity, infinity]);
+        cube([spiral_gap, infinity, spiral_height]);
       }
 
       cylinder(h = infinity, d = exhaust_diameter, center = true);
     }
 
-    tz(-disc_lock_height - disc_wall_thickness)
-    disc_support(spiral_height + disc_lock_height * 2 + disc_wall_thickness * 2);
+    tz(-disc_lock_height)
+    disc_support(disc_height);
 
-    difference() {
-      union() {
-        translate_clone([0, 0, spiral_height + disc_wall_thickness])
-        tz(-disc_wall_thickness)
-        cylinder(h = disc_wall_thickness, d = disc_diameter);
-      }
-
-      cylinder(h = infinity, d = exhaust_diameter, center = true);
-    }
-
-    tz(-disc_wall_thickness - disc_lock_height)
+    tz(-disc_lock_height)
     disc_lock(disc_lock_height + tolerance, 0);
 
-    tz(spiral_height + disc_wall_thickness - tolerance)
+    tz(spiral_height + disc_wall_thickness * 2 - tolerance)
     disc_lock(disc_lock_height + tolerance, 0);
 
-    tz(-disc_wall_thickness - disc_lock_height)
+    tz(-disc_lock_height)
     difference() {
-      cylinder(h = disc_lock_height, d = disc_diameter);
+      cylinder(h = disc_lock_height + tolerance, d = disc_diameter);
 
-      tz(-tolerance / 2)
-      cylinder(h = disc_lock_height + tolerance, d = disc_diameter - support_thickness);
+      tz(-tolerance)
+      cylinder(h = disc_lock_height + tolerance * 2, d = disc_diameter - support_thickness);
     }
   }
 }
 
+//projection(cut = true)
+//tz(-spiral_height / 2)
 spiral();
