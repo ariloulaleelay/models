@@ -22,7 +22,7 @@ module shell() {
   }
 
   module intake_hole() {
-    tz(intake_nozzle_length / 4)
+    tz(2 + intake_nozzle_length / 4)
     tx(-intake_nozzle_slot / 2)
     cube([intake_nozzle_slot, intake_internal_diameter_max, intake_nozzle_length / 2], center = true);
 
@@ -38,6 +38,7 @@ module shell() {
         r2 = intake_internal_diameter_min / 2
       );
     }
+
   }
   //!intake_hole();
 
@@ -72,33 +73,25 @@ module shell() {
     }
   }
 
-
-  module ring_nozzle_hole() {
-    union() {
+  module shell_ring_nozzle_hole() {
+    tz(intake_elevation - shell_nozzle_width / 2) {
       difference() {
         cylinder(h = shell_nozzle_width, d = shell_diameter - shell_thickness * 2);
 
-        cylinder(h = infinity, d = shell_internal_diameter + shell_thickness * 2, center = true);
+        tz(-tolerance / 2)
+        cylinder(h = shell_nozzle_width + tolerance, d = shell_internal_diameter + shell_thickness * 2);
       }
 
       for (i = [0: shell_nozzle_count - 1]) {
         rz(360 * i / shell_nozzle_count)
         tx(shell_internal_diameter / 2)
+        tx(-tolerance)
         mx()
         my()
         cube([shell_nozzle_slot, shell_nozzle_depth, shell_nozzle_width]);
       }
     }
   }
-
-/*  !tz(0) {
-    tz(intake_elevation - shell_nozzle_width / 2)
-    ring_nozzle_hole();
-
-    intake_transformation()
-    intake_hole();
-  }
-*/
 
   module chamfer_hole() {
     side_size = shell_thickness * sqrt(2) + tolerance; 
@@ -115,38 +108,43 @@ module shell() {
     difference() {
       union() {
         difference() {
-          union() {
-            difference() {
-              cylinder(h = shell_height, d = shell_diameter);
-              chamfer_hole();
-            }
+          cylinder(h = shell_height, d = shell_diameter);
 
-            shell_bolts(shell_height - shell_thickness);
+          chamfer_hole();
 
-            intake_transformation()
-            intake_shell();
+          tz(intake_elevation - shell_nozzle_width / 2) 
+          difference() {
+            cylinder(h = shell_nozzle_width, d = shell_diameter - shell_thickness * 2);
+
+            tz(-tolerance / 2)
+            cylinder(h = shell_nozzle_width + tolerance, d = shell_internal_diameter + shell_thickness * 2);
           }
-
-          tz(-tolerance)
-          cylinder(h = infinity, d = exhaust_diameter);
-
-          intake_transformation()
-          intake_hole();
-
-          tz(intake_elevation - shell_nozzle_width / 2)
-          ring_nozzle_hole();
-
-          shell_bolts_hole();
         }
 
-        disc_support(shell_height);
+        shell_bolts(shell_height - shell_thickness);
+
+        intake_transformation()
+        intake_shell();
       }
 
+      tz(-tolerance / 2)
+      cylinder(h = shell_height + tolerance, d = exhaust_diameter);
+
+
+      shell_bolts_hole();
+
       tz(shell_thickness) 
-      cylinder(h = infinity, d = shell_internal_diameter); 
+      cylinder(h = shell_height, d = shell_internal_diameter); 
+
+      shell_ring_nozzle_hole();
+
+      intake_transformation()
+      intake_hole();
     }
     
     disc_lock(shell_thickness + disc_lock_height);
+
+    disc_support(shell_thickness);
   }
 }
 

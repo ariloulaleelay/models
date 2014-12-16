@@ -1,11 +1,11 @@
-$fn = 64;
+$fn = 128;
 
 infinity = 10000;
 
 tolerance = 0.1;
 
 exhaust_diameter = 15;
-general_thickness = 1.2;
+general_thickness = 1.5;
 support_thickness = 0.4;
 
 spiral_gap = 1.2;
