@@ -22,7 +22,7 @@ module shell() {
   }
 
   module intake_hole() {
-    tz(2 + intake_nozzle_length / 4)
+    tz(tolerance + intake_nozzle_length / 4)
     tx(-intake_nozzle_slot / 2)
     cube([intake_nozzle_slot, intake_internal_diameter_max, intake_nozzle_length / 2], center = true);
 
@@ -83,9 +83,8 @@ module shell() {
       }
 
       for (i = [0: shell_nozzle_count - 1]) {
-        rz(360 * i / shell_nozzle_count)
+        rz(360 * i / shell_nozzle_count + 360 / shell_nozzle_count / 2)
         tx(shell_internal_diameter / 2)
-        tx(-tolerance)
         mx()
         my()
         cube([shell_nozzle_slot, shell_nozzle_depth, shell_nozzle_width]);

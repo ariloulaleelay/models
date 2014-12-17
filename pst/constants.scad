@@ -8,13 +8,13 @@ exhaust_diameter = 15;
 general_thickness = 1.5;
 support_thickness = 0.4;
 
-spiral_gap = 1.2;
+spiral_gap = 1.5;
 spiral_thickness = 1.2;
 spiral_height = 5;
 
 disc_diameter = 50;
-disc_gap = 0.9;
-disc_wall_thickness = 1.2;
+disc_gap = 0.6;
+disc_wall_thickness = 0.9;
 
 disc_lock_height = 3;
 disc_lock_width = 1.2; 
@@ -30,9 +30,9 @@ shell_bolts_number = 5;
 shell_thickness = general_thickness; 
 shell_bolt_diameter = 4;
 
-shell_nozzle_gap = 1.5;
-shell_nozzle_slot = 1;
-shell_nozzle_count = 8;
+shell_nozzle_gap = 2;
+shell_nozzle_slot = spiral_gap;
+shell_nozzle_count = 6;
 
 intake_nozzle_slot = shell_nozzle_gap;
 
