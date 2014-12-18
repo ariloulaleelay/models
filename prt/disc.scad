@@ -4,120 +4,119 @@ include <../scadhelpers/spiral.scad>
 include <labyrinth_seal.scad>
 
 module disc() {
-  /*
-  spiral_internal_diameter = exhaust_diameter - spiral_gap;
-  spiral_external_diameter = disc_diameter - spiral_gap - disc_wall_thickness;
 
-  spiral_loops_count = (spiral_external_diameter - spiral_internal_diameter) / 2 / (spiral_thickness + spiral_gap);
-  spiral_angle = 360 * spiral_loops_count;
+  nozzle_to_disc_delta = 
+    pow(disc_nozzle_width, 2) 
+    / 2 
+    / sqrt(pow(disc_diameter, 2) - pow(disc_nozzle_width, 2));
 
-  union() {
-    difference() {
-      cylinder(h = spiral_height + disc_wall_thickness * 2, d = disc_diameter);
-
-      tz(disc_wall_thickness)
-      union() {
-        my()
-        spiral_2048(spiral_internal_diameter / 2, spiral_external_diameter / 2, spiral_angle, spiral_gap, spiral_height);
-
-        rz(-spiral_angle)
-        tx(-spiral_gap / 2 + spiral_external_diameter / 2)
-        my()
-        cube([spiral_gap, infinity, spiral_height]);
-      }
-
-      cylinder(h = infinity, d = exhaust_diameter, center = true);
-    }
-
-    tz(-disc_lock_height)
-    disc_support(disc_height);
-
-    tz(-disc_lock_height)
-    disc_lock(disc_lock_height + tolerance, 0);
-
-    tz(spiral_height + disc_wall_thickness * 2 - tolerance)
-    disc_lock(disc_lock_height + tolerance, 0);
-
-    tz(-disc_lock_height)
-    difference() {
-      cylinder(h = disc_lock_height + tolerance, d = disc_diameter);
-
-      tz(-tolerance)
-      cylinder(h = disc_lock_height + tolerance * 2, d = disc_diameter - support_thickness);
-    }
+  module nozzle_projection(width, length, noz_width, noz_length, angle) {
+    p1 = [0, width / 2];
+    p2 = tp2d(p1, length);
+    p3 = tp2d(rp2d([noz_length, 0], 90 + angle), length, width / 2);
+    p3_1 = tp2d(rp2d([noz_length, -(width - noz_width) / 2], 90 + angle), length, width / 2);
+    p4 = tp2d(rp2d([noz_length, -width], 90 + angle), length, width / 2);
+    p4_1 = tp2d(rp2d([noz_length, -(width + noz_width) / 2], 90 + angle), length, width / 2);
+    p5 = [(p4[1] - width / 2) * tan(angle) + p4[0], width / 2];
+    p6 = [p5[0] - width * tan(angle / 2), -width / 2];
+    p7 = [0, -width / 2];
+  
+    polygon(points=[
+      p1,
+      p2,
+      p3_1,
+      p4_1,
+      p5,
+      p6,
+      p7
+    ]);
   }
-  */
+
+  module nozzle_hole_projection(width, length, noz_width, noz_length, angle, thickness) {
+    t = thickness;
+    p1 = [0, width / 2 - t];
+    p2 = tp2d(p1, length + t + t * tan(angle));
+    p3 = tp2d(rp2d([noz_length, -t], 90 + angle), length, width / 2);
+    p3_1 = tp2d(rp2d([noz_length + tolerance, -(width - noz_width) / 2 - t], 90 + angle), length, width / 2);
+    p4 = tp2d(rp2d([noz_length, -width + t], 90 + angle), length, width / 2);
+    p4_1 = tp2d(rp2d([noz_length + tolerance, -(width + noz_width) / 2 + t], 90 + angle), length, width / 2);
+    p5 = [(p4[1] - width / 2) * tan(angle) + p4[0], width / 2];
+    p6 = [p5[0] - (width - 2 * t) * tan(angle / 2), -width / 2 + t];
+    p7 = [0, -width / 2 + t];
+  
+    polygon(points=[
+      p1,
+      p2,
+      p3_1,
+      p4_1,
+      p5,
+      p6,
+      p7
+    ]);
+
+  }
 
   module nozzle_shell() {
-    delta = pow(disc_nozzle_width_max, 2) / 2 / sqrt(pow(disc_diameter, 2) - pow(disc_nozzle_width_max, 2));
-
-    tx(disc_diameter / 2 - delta)
-    ry(90)
-    mx()
-    linear_extrude(disc_nozzle_length, scale=[1, disc_nozzle_width_min / disc_nozzle_width_max])
-    ty(-disc_nozzle_width_max / 2)
-    square([disc_main_height + disc_thickness * 2, disc_nozzle_width_max]);
+    tx(disc_diameter / 2 - tolerance - nozzle_to_disc_delta)
+    linear_extrude(disc_main_height + disc_thickness * 2)
+    nozzle_projection(
+      disc_nozzle_width, 
+      disc_nozzle_length + nozzle_to_disc_delta + tolerance, 
+      disc_nozzle_slot + disc_thickness * 2, 
+      disc_nozzle_length * 0.75, 
+      disc_nozzle_angle
+    );
   }
 
+  //!nozzle_shell();
+
   module nozzle_hole() {
-    delta = pow(disc_nozzle_width_max, 2) / 2 / sqrt(pow(disc_diameter, 2) - pow(disc_nozzle_width_max, 2));
-
-    length_full = disc_nozzle_length + disc_diameter / 2 - delta; 
-    length = length_full - disc_thickness;
-    max_width = 
-      (disc_nozzle_width_max - disc_nozzle_width_min)
-      * length_full
-      / disc_nozzle_length
-      + disc_nozzle_width_min
-      - disc_thickness * 2;
-    min_width = 
-      (disc_nozzle_width_max - disc_nozzle_width_min)
-      * disc_thickness 
-      / disc_nozzle_length
-      + disc_nozzle_width_min
-      - disc_thickness * 2;
-    height = disc_main_height;
-
-    tz(disc_thickness) {
-      ry(90)
-      mx()
-      linear_extrude(length, scale=[1, min_width / max_width])
-      ty(-max_width / 2)
-      square([height, max_width]);
-
-      tx(length - disc_nozzle_slot * cos(disc_nozzle_angle) - tolerance)
-      rz(disc_nozzle_angle)
-      tx(-disc_nozzle_slot / 2)
-      cube([disc_nozzle_slot, disc_nozzle_width_max, height]);
-    }
+    tz(disc_thickness)
+    linear_extrude(disc_main_height)
+    nozzle_hole_projection(
+      disc_nozzle_width, 
+      disc_nozzle_length + disc_diameter / 2,
+      disc_nozzle_slot + disc_thickness * 2, 
+      disc_nozzle_length * 0.75, 
+      disc_nozzle_angle,
+      disc_thickness
+    );
   }
 
   //!nozzle_hole();
 
   difference() {
     union() {
+      labyrinth_seal(labyrinth_seal_height + tolerance, 1);
+
+      tz(labyrinth_seal_height) 
       difference() {
         cylinder(h = disc_height, d = disc_diameter);
 
-        tz(disc_thickness)
-        cylinder(h = disc_height, d = disc_inner_diameter);
-
         tz(-tolerance / 2)
-        cylinder(h = disc_thickness + tolerance, d = bolt_diameter);
+        cylinder(h = disc_height + tolerance, d = disc_inner_diameter);
       }
 
-      tz(disc_height - tolerance / 2)
+
+      tz(labyrinth_seal_height + disc_height - tolerance / 2)
       labyrinth_seal(labyrinth_seal_height + tolerance, 1);
 
-      mirror_clone([1, 0, 0])
-      nozzle_shell();
+      tz(labyrinth_seal_height) {
+        nozzle_shell();
+        
+        my()
+        mx()
+        nozzle_shell();
+      }
     }
 
-    nozzle_hole();
+    tz(labyrinth_seal_height) {
+      nozzle_hole();
 
-    my()
-    mx()
-    nozzle_hole();
+      my()
+      mx()
+      nozzle_hole();
+    }
   }
 }
 

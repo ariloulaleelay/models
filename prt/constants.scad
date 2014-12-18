@@ -10,9 +10,9 @@ bolt_support_thickness = 1.5;
 disc_thickness = 1.2;
 support_thickness = 0.4;
 
-labyrinth_seal_height = 4;
-labyrinth_seal_width = 1.2; 
-labyrinth_seal_gap = 1.2;
+labyrinth_seal_height = 2.7;
+labyrinth_seal_width = 1; 
+labyrinth_seal_gap = 1;
 labyrinth_seal_loops = 4;
 
 intake_pipe_length = 20;
@@ -31,15 +31,14 @@ shell_diameter =
 
 shell_thickness = general_thickness; 
 shell_intake_cone_height = 
-  tan(60) * (shell_intake_inner_diameter - intake_pipe_inner_diameter_max) / 2;
+  tan(80) * (shell_intake_inner_diameter - intake_pipe_inner_diameter_max) / 2;
 
 disc_diameter = shell_diameter - labyrinth_seal_gap - labyrinth_seal_width * 2;
 disc_inner_diameter = shell_intake_inner_diameter + labyrinth_seal_width * 2 + labyrinth_seal_gap;
 disc_main_height = 5;
 disc_height = disc_main_height + disc_thickness * 2;
-disc_nozzle_length = 20;
-disc_nozzle_channel_width = 3;
-disc_nozzle_slot = 1;
+disc_nozzle_length = 10;
+disc_nozzle_channel_width = 4;
+disc_nozzle_slot = 1.5;
 disc_nozzle_angle = 45;
-disc_nozzle_width_min = disc_nozzle_channel_width + disc_thickness * 2;
-disc_nozzle_width_max = disc_nozzle_width_min * 1.5;
+disc_nozzle_width = disc_nozzle_channel_width + disc_thickness * 2;
