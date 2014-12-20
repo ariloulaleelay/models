@@ -31,7 +31,7 @@ shell_diameter =
 
 shell_thickness = general_thickness; 
 shell_intake_cone_height = 
-  tan(80) * (shell_intake_inner_diameter - intake_pipe_inner_diameter_max) / 2;
+  tan(75) * (shell_intake_inner_diameter - intake_pipe_inner_diameter_max) / 2;
 
 disc_diameter = shell_diameter - labyrinth_seal_gap - labyrinth_seal_width * 2;
 disc_inner_diameter = shell_intake_inner_diameter + labyrinth_seal_width * 2 + labyrinth_seal_gap;

@@ -1,6 +1,5 @@
 include <constants.scad>
 include <../scadhelpers/all.scad>
-include <shell_bolts.scad>
 include <bolt_support.scad>
 include <labyrinth_seal.scad>
 

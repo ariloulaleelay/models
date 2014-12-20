@@ -1,6 +1,5 @@
 include <constants.scad>
 include <../scadhelpers/all.scad>
-include <shell_bolts.scad>
 include <labyrinth_seal.scad>
 
 module cap() {
