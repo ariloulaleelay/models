@@ -8,4 +8,4 @@ disc: stl/disc.stl
 cap: stl/cap.stl
 
 stl/%.stl: *.scad
-	/usr/bin/openscad $*.scad -o stl/$*.stl
+	openscad $*.scad -o stl/$*.stl
