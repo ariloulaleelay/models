@@ -40,5 +40,5 @@ disc_height = disc_main_height + disc_thickness * 2;
 disc_nozzle_length = 10;
 disc_nozzle_channel_width = 4;
 disc_nozzle_slot = 1.5;
-disc_nozzle_angle = 45;
+disc_nozzle_angle = 15;
 disc_nozzle_width = disc_nozzle_channel_width + disc_thickness * 2;

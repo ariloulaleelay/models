@@ -56,16 +56,42 @@ module disc() {
 
   }
 
+  module nozzle_shell_support() {
+    length = disc_nozzle_length * 2;
+    step_count = ceil(length * 2 / 3) + 1;
+    step = length / step_count;
+
+    for (i = [1 : step_count]) {
+      tx(i * step)
+      ty(-infinity / 2)
+      cube([support_thickness, infinity, infinity]);
+    }
+  }
+
   module nozzle_shell() {
-    tx(disc_diameter / 2 - tolerance - nozzle_to_disc_delta)
-    linear_extrude(disc_main_height + disc_thickness * 2)
-    nozzle_projection(
-      disc_nozzle_width, 
-      disc_nozzle_length + nozzle_to_disc_delta + tolerance, 
-      disc_nozzle_slot + disc_thickness * 2, 
-      disc_nozzle_length * 0.75, 
-      disc_nozzle_angle
-    );
+    module shell() {
+      linear_extrude(disc_main_height + disc_thickness * 2)
+      nozzle_projection(
+        disc_nozzle_width, 
+        disc_nozzle_length + nozzle_to_disc_delta + tolerance, 
+        disc_nozzle_slot + disc_thickness * 2, 
+        disc_nozzle_length * 0.75, 
+        disc_nozzle_angle
+      );
+    }
+
+    tx(disc_diameter / 2 - tolerance - nozzle_to_disc_delta) 
+    union() {
+      shell();
+
+      tz(-labyrinth_seal_height)
+      intersection() {
+        shell();
+
+        nozzle_shell_support();
+      }
+
+    }
   }
 
   //!nozzle_shell();
