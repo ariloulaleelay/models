@@ -10,10 +10,10 @@ bolt_support_thickness = 1.5;
 disc_thickness = 1.2;
 support_thickness = 0.4;
 
-labyrinth_seal_height = 0.64;
+labyrinth_seal_height = 0.94;
 labyrinth_seal_width = 0.6; 
 labyrinth_seal_gap = 1;
-labyrinth_seal_loops = 6;
+labyrinth_seal_loops = 8;
 
 intake_pipe_length = 20;
 intake_pipe_thickness = 1.5;
