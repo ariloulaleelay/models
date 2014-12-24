@@ -1,50 +1,30 @@
 include <constants.scad>
 include <../scadhelpers/all.scad>
-include <../scadhelpers/spiral.scad>
-include <labyrinth_seal.scad>
+include <spiral.scad>
+include <bolt_support.scad>
 
 module disc() {
 
   union() {
     difference() {
-      union() {
-        tz(labyrinth_seal_height)
-        cylinder(h = disc_height, d = disc_diameter);
+      ring(disc_inner_diameter, disc_diameter, disc_height); 
 
-        labyrinth_seal(labyrinth_seal_height + tolerance, 1);
-
-        tz(labyrinth_seal_height + disc_height - tolerance / 2)
-        labyrinth_seal(labyrinth_seal_height + tolerance, 1);
-      }
-
-      tz(-tolerance / 2)
-      cylinder(h = disc_height + labyrinth_seal_height * 2 + tolerance, d = disc_inner_diameter);
-        
-      tz(labyrinth_seal_height + disc_thickness)
+      tz(disc_thickness)
       rotate_clone([0, 0, 180]) 
-      union() {
-        extended_spiral_128(
-          disc_inner_diameter / 4,
-          disc_diameter / 2 - disc_nozzle_slot / 2,
-          disc_inner_diameter / 2,
-          disc_nozzle_slot,
-          disc_main_height,
-          disc_nozzle_angle,
-          2 
-        );
-
-        rz(disc_nozzle_angle)
-        tx(disc_diameter / 2 - disc_nozzle_slot)
-        cube([disc_nozzle_slot, disc_diameter, disc_main_height]);
-      }
+      disc_spiral_128(
+        disc_inner_diameter / 2 - disc_nozzle_channel_width / 2,
+        disc_diameter / 2 + disc_nozzle_slot / 2,
+        disc_nozzle_channel_width,
+        disc_nozzle_slot,
+        disc_main_height,
+        disc_nozzle_angle,
+        4 
+      );
     }
 
-    difference() {
-      cylinder(h = disc_height + labyrinth_seal_height * 2, d = disc_inner_diameter + support_thickness * 2);
+    ring(disc_inner_diameter, support_thickness * 2 + disc_inner_diameter, disc_height);
 
-      tz(-tolerance / 2)
-      cylinder(h = disc_height + labyrinth_seal_height * 2 + tolerance, d = disc_inner_diameter); 
-    }
+    bolt_support(disc_thickness);
   }
 }
 

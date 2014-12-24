@@ -1,17 +1,13 @@
 include <constants.scad>
 include <../scadhelpers/all.scad>
 include <labyrinth_seal.scad>
+include <shell_bolts.scad>
 
 module cap() {
   union() {
-    labyrinth_seal(labyrinth_seal_height + shell_thickness);
+    shell_bolts(shell_thickness);
 
-    difference() {
-      cylinder(d = shell_diameter, h = shell_thickness);
-
-      tz(-tolerance / 2)
-      cylinder(d = bolt_diameter, h = shell_thickness + tolerance);
-    }
+    ring(bolt_diameter, shell_diameter, shell_thickness);
   }
 }
 

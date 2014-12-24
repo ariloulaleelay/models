@@ -2,17 +2,16 @@ include <constants.scad>
 include <../scadhelpers/all.scad>
 include <bolt_support.scad>
 include <labyrinth_seal.scad>
+include <shell_bolts.scad>
 
 module shell() {
   union() {
-    labyrinth_seal(labyrinth_seal_height + tolerance);
-
-    tz(labyrinth_seal_height)
     ring(shell_intake_inner_diameter, shell_diameter, shell_thickness);
 
-    bolt_support(labyrinth_seal_height + shell_thickness);
+    shell_bolts(shell_thickness);
+    //bolt_support(shell_thickness);
 
-    tz(labyrinth_seal_height + shell_thickness - tolerance / 2)
+    tz(shell_thickness - tolerance / 2)
     difference() {
       cylinder(
         h = shell_intake_cone_height + tolerance, 
@@ -28,7 +27,7 @@ module shell() {
       );
     }
 
-    tz(labyrinth_seal_height + shell_thickness + shell_intake_cone_height)
+    tz(shell_thickness + shell_intake_cone_height)
     difference() {
       cylinder(
         h = intake_pipe_length,
