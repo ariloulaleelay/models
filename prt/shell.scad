@@ -15,7 +15,7 @@ module shell() {
     difference() {
       cylinder(
         h = shell_intake_cone_height + tolerance, 
-        r1 = (shell_intake_inner_diameter + intake_pipe_thickness) / 2, 
+        r1 = shell_intake_inner_diameter / 2 + intake_pipe_thickness, 
         r2 = intake_pipe_diameter_max / 2
       );
 
