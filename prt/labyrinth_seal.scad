@@ -1,15 +1,24 @@
 include <constants.scad>
 include <../scadhelpers/all.scad>
 
-module labyrinth_seal(height, shift=0) {
-  step_size = labyrinth_seal_width * 4 + labyrinth_seal_gap * 2;
-  ring_base_shift = shell_intake_outer_diameter + shift * (labyrinth_seal_width * 2 + labyrinth_seal_gap);
+module labyrinth_seal(height, inner_diameter, outer_diameter, shift=0) {
 
-  for (i = [0 : labyrinth_seal_loops - shift]) {
-    ring(
-      ring_base_shift + step_size * i - labyrinth_seal_width * 2,
-      ring_base_shift + step_size * i, 
-      height
-    );
+  square_side = height * 2 / sqrt(2) + 0.000001;
+  loops_count = floor((outer_diameter - inner_diameter) / height / 4); 
+
+  module single_ring(radius) {
+    rotate_extrude()
+    tx(radius)
+    rz(45)
+    square([square_side, square_side], center=true);
+  }
+
+  intersection() {
+    union() {
+      for (i = [0 : loops_count]) {
+        single_ring(inner_diameter / 2 + i * height * 2 + shift * height);
+      }
+    }
+    ring(inner_diameter, outer_diameter, height + tolerance);
   }
 }

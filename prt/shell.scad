@@ -43,6 +43,10 @@ module shell() {
       );
 
     }
+
+    tz(tolerance / 10)
+    mz()
+    labyrinth_seal(labyrinth_seal_height, disc_inner_diameter, shell_diameter);
   }
 
 }
