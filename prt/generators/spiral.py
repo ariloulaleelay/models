@@ -9,19 +9,29 @@ def spiral(segments_number):
         alphas.append(float(i) / (segments_number - 1))
 
     polyline_text = ''
-    polyline_text += ','.join(map(lambda alpha: 'p(angle*{0}, a0*exp(b0*angle_rad*{0}) - t({0}))'.format(alpha), alphas))
-    polyline_text += ',' + ','.join(map(lambda alpha: 'p(angle*{0}, a1*exp(b1*angle_rad*{0}) + t({0}))'.format(alpha), reversed(alphas)))
+#    polyline_text += ','.join(map(lambda alpha: 'p(angle*{0}, a0*exp(b0*angle_rad*{0}) - t({0}))'.format(alpha), alphas))
+#    polyline_text += ',' + ','.join(map(lambda alpha: 'p(angle*{0}, a1*exp(b1*angle_rad*{0}) + t({0}))'.format(alpha), reversed(alphas)))
+    polyline_text += ','.join(map(lambda alpha: 'p(angle*{0}, a0*exp(b0*angle_rad*{0}))'.format(alpha), alphas))
+    polyline_text += ',' + ','.join(map(lambda alpha: 'p(angle*{0}, a1*exp(b1*angle_rad*{0}))'.format(alpha), reversed(alphas)))
     print '''
 module disc_spiral_{segments_number}(radius_from, radius_to, thickness_from, thickness_to, height, angle, alpha_power=1.0) {{
     function p(phi,r) = [cos(phi)*r, sin(phi)*r];
     function t(alpha) = thickness_from/2 + pow(alpha, alpha_power) * (thickness_to-thickness_from)/2;
 
     angle_rad = angle / 180 * 3.1415926;
+    /*
     a0 = radius_from;
     b0 = ln(radius_to / a0) / angle_rad;
 
     a1 = a0;
     b1 = b0;
+    */
+    
+    a0 = radius_from - thickness_from / 2;
+    b0 = ln((radius_to - thickness_to / 2) / a0) / angle_rad;
+
+    a1 = radius_from + thickness_from / 2;
+    b1 = ln((radius_to + thickness_to / 2) / a1) / angle_rad;
 
     linear_extrude(height=height)
         polygon([{polyline_text}]);

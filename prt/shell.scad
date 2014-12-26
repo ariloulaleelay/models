@@ -1,8 +1,4 @@
-include <constants.scad>
-include <../scadhelpers/all.scad>
-include <bolt_support.scad>
-include <labyrinth_seal.scad>
-include <shell_bolts.scad>
+include <all.scad>
 
 module shell() {
   union() {
@@ -45,8 +41,13 @@ module shell() {
     }
 
     tz(tolerance / 10)
-    mz()
-    labyrinth_seal(labyrinth_seal_height, disc_inner_diameter, shell_diameter);
+    mz() {
+      labyrinth_seal(labyrinth_seal_height, seal_inner_diameter, seal_diameter);
+
+      ring_support(shell_intake_inner_diameter, seal_inner_diameter, labyrinth_seal_height);
+
+      ring_support(seal_diameter, shell_diameter + bolt_diameter * 2 + general_thickness * 2, labyrinth_seal_height);
+    }
   }
 
 }

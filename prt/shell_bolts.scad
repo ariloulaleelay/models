@@ -13,8 +13,8 @@ module shell_bolts_hole(height) {
 }
 
 module shell_bolts(height) {
-  shell_bolt_extension_diameter = bolt_diameter + general_thickness * 2;
   cube_side = shell_bolt_extension_diameter / 2 + tolerance;
+  shell_bolt_extension_diameter = bolt_diameter + general_thickness * 2;
   difference() {
     union() {
       for (i = [0 : shell_bolts_number - 1]) {

@@ -1,8 +1,4 @@
-include <constants.scad>
-include <../scadhelpers/all.scad>
-include <spiral.scad>
-include <bolt_support.scad>
-include <labyrinth_seal.scad>
+include <all.scad>
 
 module disc() {
 
@@ -15,31 +11,37 @@ module disc() {
         //color("black")
         tz(disc_thickness)
         rotate_clone([0, 0, 180]) {
-          disc_spiral_128(
-            disc_inner_diameter / 2 - disc_nozzle_channel_width / 2,
+          extended_spiral_128(
+            max(disc_inner_diameter / 2 - disc_nozzle_channel_width / 2, disc_nozzle_channel_width / 2),
             disc_diameter / 2 - disc_nozzle_slot / 2,
             disc_nozzle_channel_width,
             disc_nozzle_slot,
             disc_main_height,
             disc_nozzle_angle,
-            6 
+            1 
           );
 
           rz(disc_nozzle_angle)
           tx(disc_diameter / 2 - disc_nozzle_slot)
+          ty(-tolerance)
           cube([disc_nozzle_slot, disc_diameter, disc_main_height]);
         }
       }
     }
 
     tz(disc_height - tolerance / 10)
-    labyrinth_seal(labyrinth_seal_height, disc_inner_diameter, disc_diameter, 1);
+    labyrinth_seal(labyrinth_seal_height, seal_inner_diameter, seal_diameter, 1);
 
     tz(tolerance / 10)
-    mz()
-    labyrinth_seal(labyrinth_seal_height, disc_inner_diameter, disc_diameter, 1);
+    mz() {
+      labyrinth_seal(labyrinth_seal_height, seal_inner_diameter, seal_diameter, 1);
+
+      ring_support(disc_inner_diameter, seal_inner_diameter, labyrinth_seal_height);
+    }
 
     ring(disc_inner_diameter, support_thickness * 2 + disc_inner_diameter, disc_height);
+
+    ring(disc_diameter - support_thickness * 2, disc_diameter, disc_height);
 
     //bolt_support(disc_thickness);
   }
