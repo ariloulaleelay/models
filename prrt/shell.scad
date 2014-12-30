@@ -20,8 +20,8 @@ module shell() {
 
     }
 
-    tz(shell_thickness - tolerance / 10)
-    labyrinth_seal(seal_height, seal_inner_diameter, seal_diameter);
+    //tz(shell_thickness - tolerance / 10)
+    //labyrinth_seal(seal_height, seal_inner_diameter, seal_diameter);
   }
 
 }

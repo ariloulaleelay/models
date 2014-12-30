@@ -1,18 +1,18 @@
 include <all.scad>
 
 module cap() {
-  union() {
-    shell_bolts(shell_thickness);
+  difference() {
+    union() {
+      disc_bolts(disc_thickness);
 
-    //ring(bolt_diameter, shell_diameter, shell_thickness);
+      cylinder(h = disc_thickness * 2, d = disc_diameter);
+    }
 
-    cylinder(h = shell_thickness, d = shell_diameter);
+    tz(disc_thickness)
+    cylinder(h = disc_thickness + tolerance, r1 = disc_diameter / 2 - disc_thickness, r2 = disc_diameter / 2);
 
-    tz(shell_thickness + tolerance / 10)
-    labyrinth_seal(labyrinth_seal_height, seal_inner_diameter, seal_diameter);
-
-    tz(shell_thickness - tolerance)
-    cylinder(h = disc_height + tolerance + labyrinth_seal_height * 2, r1 = disc_inner_diameter / 4, r2 = tolerance);
+    tz(-tolerance / 2)
+    cylinder(h = disc_thickness * 2 + tolerance, d = intake_pipe_diameter_max + 2);
   }
 }
 
