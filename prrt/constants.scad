@@ -11,10 +11,10 @@ support_thickness = 0.4;
 
 seal_height = 2.4;
 
-intake_pipe_length = 35;
+intake_pipe_length = 40;
 intake_pipe_thickness = 1.5;
 intake_pipe_diameter_min = 7.8;
-intake_pipe_diameter_max = 8.5;
+intake_pipe_diameter_max = 8.8;
 intake_pipe_inner_diameter_min = intake_pipe_diameter_min - intake_pipe_thickness * 2;
 intake_pipe_inner_diameter_max = intake_pipe_diameter_max - intake_pipe_thickness * 2;
 
@@ -28,7 +28,7 @@ flow_square = pow((intake_pipe_diameter_max + intake_pipe_diameter_min)/4,2) * 3
 disc_diameter = 50;
 shell_diameter = intake_pipe_diameter_max + 5 * 2;
 disc_inner_diameter = intake_pipe_diameter_max + 2;
-disc_main_height = sqrt(flow_square / 3);
+disc_main_height = sqrt(flow_square / 2);
 disc_height = disc_main_height + disc_thickness * 2;
 disc_nozzle_channel_width = disc_main_height * 2; 
 disc_nozzle_slot = disc_main_height;
