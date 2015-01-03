@@ -9,13 +9,14 @@ bolt_length = 20;
 thickness = 2.1;
 
 motor_pin_diameter = 3.2;
-motor_pin_length = 5;
+motor_pin_length = 10;
 motor_pin_width = 30;
 motor_width = motor_pin_width + thickness;
 
 fan_length = 14.8;
 fan_hole_width = 40;
 fan_width = fan_hole_width + thickness * 2 + bolt_diameter;
+fan_shift = 10;
 
 fan_elevation = bolt_length - fan_length + thickness;
 motor_elevation = fan_elevation - thickness;
@@ -25,20 +26,22 @@ grid_thickness = 1.2;
 
 module adapter() {
   module grid() {
-    height = motor_elevation - grid_thickness * 2;
+    height = motor_elevation - thickness;
     width = grid_width;
     step_count = floor((motor_pin_width + thickness) / (width + grid_thickness));
     step = motor_pin_width / step_count;
     real_thickness = step - width;
     for (i = [0 : step_count - 1]) {
-      tz(fan_elevation / 2 + grid_thickness)
+      tz(fan_elevation / 2)
       tx(motor_pin_width / 2 - i * step - real_thickness / 2) 
+      ty(motor_pin_width / 2)
       mx()
       cube([width, fan_width, height]);
     }
   }
 
   module bolt_support() {
+    ty(fan_shift)
     mirror_clone([0, 1, 0])
     mirror_clone([1, 0, 0])
     ty(fan_hole_width / 2)
@@ -76,17 +79,23 @@ module adapter() {
       }
 
       hull() {
+        ty(fan_shift)
+        tz(-thickness)
         cube([fan_width - thickness * 2, fan_width - thickness * 2, fan_elevation + tolerance], center=true);
 
-        tz(fan_elevation / 2 + motor_elevation - tolerance / 2)
+        tz(fan_elevation / 2 + motor_elevation - tolerance / 2 - thickness)
         cube([motor_width - thickness * 2, motor_width - thickness * 2, tolerance * 2], center = true);
       }
+
+      tz(fan_elevation / 2 + motor_elevation + fan_elevation * 5 - thickness)
+      cube([motor_width - thickness * 2, motor_width - thickness * 2, fan_elevation * 10], center=true);
 
       grid();
     }
   }
 
   module bolt_holes() {
+    ty(fan_shift)
     mirror_clone([0, 1, 0])
     mirror_clone([1, 0, 0])
     ty(fan_hole_width / 2)
