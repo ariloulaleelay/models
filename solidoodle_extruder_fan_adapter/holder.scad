@@ -8,13 +8,13 @@ bolt_length = 20;
 
 thickness = 2.1;
 
-motor_pin_diameter = 2.7;
+motor_pin_diameter = 3.2;
 motor_pin_length = 5;
-motor_pin_width = 35;
+motor_pin_width = 30;
 motor_width = motor_pin_width + thickness;
 
-fan_length = 10;
-fan_hole_width = 45;
+fan_length = 14.8;
+fan_hole_width = 40;
 fan_width = fan_hole_width + thickness * 2 + bolt_diameter;
 
 fan_elevation = bolt_length - fan_length + thickness;
@@ -25,13 +25,13 @@ grid_thickness = 1.2;
 
 module adapter() {
   module grid() {
-    height = motor_elevation - thickness * 2;
+    height = motor_elevation - grid_thickness * 2;
     width = grid_width;
     step_count = floor((motor_pin_width + thickness) / (width + grid_thickness));
     step = motor_pin_width / step_count;
     real_thickness = step - width;
     for (i = [0 : step_count - 1]) {
-      tz(fan_elevation / 2 + thickness)
+      tz(fan_elevation / 2 + grid_thickness)
       tx(motor_pin_width / 2 - i * step - real_thickness / 2) 
       mx()
       cube([width, fan_width, height]);
@@ -47,6 +47,7 @@ module adapter() {
   }
 
   module motor_pins(height=motor_pin_length+tolerance) {
+    my()
     mirror_clone([1, 1, 0])
     tz(fan_elevation / 2 + motor_elevation - tolerance)
     tx(motor_pin_width / 2)
