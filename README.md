@@ -1,27 +1,27 @@
 Some of my models made public.
 
-## prerequisite
+## Prerequisite
 
 ```
 $ pip install yaost
 ```
 
-## building scad
+## Building scad
 
 ```
 $ <model_script.py> build-scad
 $ openscad scad/<project_name>/<model_name>.scad
 ```
 
-## building stl
+## Building stl
 
 ```
 $ <model_script.py> build
-$ openscad scad/<project_name>/<model_name>.scad
+# model will be at build/<project_name>/<model_name>.stl
 ```
 
 
-## watch mode
+## Watch mode
 
 ```
 $ <model_script.py> watch # will watch source changes and rebuild .scad
